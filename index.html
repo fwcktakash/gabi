@@ -32,7 +32,7 @@ body{
   to{transform:translateY(110vh);opacity:0;}
 }
 
-/* TELA HACKER */
+/* TELA HACKER (GATILHO) */
 .hacker{
   position:absolute;
   width:100%;
@@ -42,14 +42,22 @@ body{
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  z-index:20;
+  z-index:30;
   text-align:center;
+  cursor: pointer;
+  transition: opacity 0.8s;
 }
 
 .hacker p{
   font-size:0.9em;
   color:#ff4d6d;
   margin-top:10px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 /* CAPA */
@@ -92,6 +100,7 @@ button{
   border:none;
   border-radius:20px;
   color:#fff;
+  cursor: pointer;
 }
 
 /* carta */
@@ -102,6 +111,7 @@ button{
   background:#200;
   position:relative;
   display:none;
+  cursor: pointer;
 }
 
 .flap{
@@ -112,6 +122,7 @@ button{
   clip-path:polygon(0 0,100% 0,50% 60%);
   transform-origin:top;
   transition:1s;
+  z-index: 5;
 }
 
 .letter{
@@ -120,13 +131,14 @@ button{
   height:100%;
   background:#000;
   padding:20px;
-  transform:translateY(100%);
+  transform:translateY(0);
   transition:1s;
   text-align:center;
+  z-index: 2;
 }
 
-.open .flap{ transform:rotateX(180deg);}
-.open .letter{ transform:translateY(0);}
+.open .flap{ transform:rotateX(180deg); z-index: 1;}
+.open .letter{ transform:translateY(-50%); z-index: 10; height: auto; min-height: 250px;}
 
 /* texto */
 .text{margin-top:10px;font-size:0.95em;}
@@ -143,18 +155,18 @@ h2{
 
 <body>
 
-<!-- TELA HACKER (BUFFER) -->
-<div class="hacker" id="hacker">
-  <h2 id="hacktext"></h2>
-  <p>conectando emoções...</p>
+<!-- TELA HACKER (O clique aqui libera o som) -->
+<div class="hacker" id="hacker" onclick="ativarTudo()">
+  <h2 id="hacktext">CLIQUE PARA CONECTAR...</h2>
+  <p id="subtext">estabelecendo conexão segura</p>
 </div>
 
 <!-- CAPA -->
 <div class="cover" id="cover">
   <div class="music-cover">
-    <img src="vampire.png">
+    <img src="vampire.png" alt="Capa">
   </div>
-  <button onclick="start()">toca aqui sua linda 🩸</button>
+  <button onclick="irParaCarta()">toca aqui sua linda 🩸</button>
 </div>
 
 <!-- CARTA -->
@@ -163,76 +175,70 @@ h2{
 
   <div class="letter">
     <h2>Gabi...</h2>
-
     <p class="text" id="typing"></p>
-
     <p class="pergunta">me perdoa? 💔</p>
-
     <p class="ass">swaglean33 te ama 🖤</p>
 
-    <button onclick="yes(event)">sim 💖</button>
-    <button onclick="no(event)" id="noBtn">não 💔</button>
+    <div style="display: flex; justify-content: center; gap: 10px;">
+        <button onclick="yes(event)">sim 💖</button>
+        <button onclick="no(event)" id="noBtn">não 💔</button>
+    </div>
 
     <div class="msg" id="msg"></div>
   </div>
 </div>
 
-<iframe id="music" width="0" height="0" allow="autoplay"></iframe>
+<!-- O IFRAME DO YOUTUBE (Fica oculto) -->
+<iframe id="music" width="0" height="0" src="" frameborder="0" allow="autoplay"></iframe>
 
 <script>
+let started = false;
+const iframe = document.getElementById("music");
 
-let started=false;
+/* 1. FUNÇÃO DISPARADA NO PRIMEIRO CLIQUE */
+function ativarTudo() {
+  if (!started) {
+    started = true;
+    
+    // Toca a música imediatamente
+    iframe.src = "https://youtube.com";
 
-/* HACKER TEXT */
-const hack = "inicializando conexão emocional com gabi...";
+    // Inicia o texto hacker
+    document.getElementById("hacktext").innerHTML = "";
+    hackType();
+
+    // Aguarda um pouco para mostrar a capa (enquanto a música já toca)
+    setTimeout(() => {
+      document.getElementById("hacker").style.opacity = "0";
+      setTimeout(() => {
+        document.getElementById("hacker").style.display = "none";
+        document.getElementById("cover").style.display = "flex";
+      }, 800);
+    }, 3500);
+  }
+}
+
+/* EFEITO DE DIGITAÇÃO HACKER */
+const hackStr = "inicializando conexão emocional com gabi...";
 let h = 0;
 
 function hackType(){
   const el = document.getElementById("hacktext");
-
-  function type(){
-    if(h < hack.length){
-      el.innerHTML += hack.charAt(h);
-      h++;
-      setTimeout(type,50);
-    }
+  if(h < hackStr.length){
+    el.innerHTML += hackStr.charAt(h);
+    h++;
+    setTimeout(hackType, 50);
   }
-  type();
 }
 
-window.onload = () => {
-  hackType();
-
-  setTimeout(()=>{
-    document.getElementById("hacker").style.display="none";
-    document.getElementById("cover").style.display="flex";
-  },2500);
-};
-
-/* START */
-function start(){
-
-  if(!started){
-    const iframe = document.getElementById("music");
-
-    iframe.src =
-    "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
-
-    started=true;
-
-    setTimeout(()=>{
-      iframe.src =
-      "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
-    },1200);
-  }
-
+/* MUDAR PARA A CARTA */
+function irParaCarta(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 }
 
-/* carta */
+/* LÓGICA DA CARTA */
 let typed=false;
-
 function openLetter(){
   const env=document.getElementById("env");
   env.classList.toggle("open");
@@ -243,47 +249,37 @@ function openLetter(){
   }
 }
 
-/* texto fofo */
 const text="mesmo com minhas brincadeiras bobas... eu amo muito você 💔";
 let i=0;
-
 function startTyping(){
   const el=document.getElementById("typing");
-
-  function type(){
-    if(i<text.length){
-      el.innerHTML+=text.charAt(i);
-      i++;
-      setTimeout(type,40);
-    }
+  if(i < text.length){
+    el.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(startTyping, 40);
   }
-  type();
 }
 
-/* sim */
 function yes(e){
   e.stopPropagation();
-  document.getElementById("msg").style.display="block";
-  document.getElementById("msg").innerText="eu te amo ❤️";
+  const msg = document.getElementById("msg");
+  msg.style.display="block";
+  msg.innerText="eu te amo ❤️";
 }
 
-/* não */
 function no(e){
   e.stopPropagation();
-
   const btn=document.getElementById("noBtn");
-
   const x=Math.random()*(window.innerWidth-100);
   const y=Math.random()*(window.innerHeight-50);
-
-  btn.style.position="absolute";
+  btn.style.position="fixed";
   btn.style.left=x+"px";
   btn.style.top=y+"px";
-
-  document.getElementById("msg").style.display="block";
-  document.getElementById("msg").innerText="vc é mt chata cara 😭";
+  
+  const msg = document.getElementById("msg");
+  msg.style.display="block";
+  msg.innerText="vc é mt chata cara 😭";
 }
-
 </script>
 
 </body>
