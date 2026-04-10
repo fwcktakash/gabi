@@ -18,7 +18,7 @@ body{
   color:#fff;
 }
 
-/* gotas */
+/* sangue */
 .drop{
   position:absolute;
   top:-20px;
@@ -28,9 +28,11 @@ body{
   opacity:0.6;
   animation:fall linear infinite;
 }
-@keyframes fall{to{transform:translateY(110vh);opacity:0;}}
+@keyframes fall{
+  to{transform:translateY(110vh);opacity:0;}
+}
 
-/* CAPA */
+/* capa */
 .cover{
   position:absolute;
   width:100%;
@@ -48,7 +50,8 @@ body{
   height:200px;
   border-radius:12px;
   overflow:hidden;
-  animation:heartbeat 1s infinite;
+  animation:heartbeat 1.2s infinite;
+  box-shadow:0 0 25px red;
 }
 
 .music-cover img{
@@ -69,9 +72,10 @@ button{
   border:none;
   border-radius:20px;
   color:#fff;
+  font-size:1em;
 }
 
-/* CARTA */
+/* carta */
 .envelope{
   width:90%;
   max-width:320px;
@@ -105,33 +109,17 @@ button{
 .open .flap{ transform:rotateX(180deg);}
 .open .letter{ transform:translateY(0);}
 
-/* glitch */
-.glitch{
-  color:#ff4d6d;
-  position:relative;
-}
-.glitch::before,
-.glitch::after{
-  content:attr(data-text);
-  position:absolute;
-  left:0;
-  width:100%;
-}
-.glitch::before{color:red;animation:glitch 1s infinite;}
-.glitch::after{color:blue;animation:glitch 1s infinite reverse;}
-
-@keyframes glitch{
-  0%{transform:translate(0);}
-  25%{transform:translate(-2px,2px);}
-  50%{transform:translate(2px,-2px);}
-  75%{transform:translate(-2px,-2px);}
-  100%{transform:translate(0);}
-}
-
-.text{margin-top:10px;font-size:0.9em;}
+/* texto */
+.text{margin-top:10px;font-size:0.95em;}
+.pergunta{margin-top:10px;color:#ff4d6d;}
 .ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
-.msg{margin-top:10px;display:none;}
+.msg{margin-top:10px;display:none;color:#fff;}
 
+/* glitch leve */
+h2{
+  color:#ff4d6d;
+  text-shadow:0 0 10px red;
+}
 </style>
 </head>
 
@@ -150,52 +138,69 @@ button{
   <div class="flap"></div>
 
   <div class="letter">
-    <h1 class="glitch" data-text="Gabi...">Gabi...</h1>
+    <h2>Gabi...</h2>
 
     <p class="text" id="typing"></p>
+
+    <p class="pergunta">me perdoa? 💔</p>
 
     <p class="ass">swaglean33 te ama 🖤</p>
 
     <button onclick="yes(event)">sim 💖</button>
     <button onclick="no(event)" id="noBtn">não 💔</button>
 
-    <div class="msg" id="msg">eu te amo ❤️</div>
+    <div class="msg" id="msg"></div>
   </div>
 </div>
 
 <iframe id="music" width="0" height="0" allow="autoplay"></iframe>
 
 <script>
-/* iniciar música mutada */
-function initMusic(){
-  document.getElementById("music").src =
-  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
-}
 
-window.onload = initMusic;
+let started = false;
 
-/* botão tocar */
+/* música suave */
 function start(){
+  if(!started){
+    const iframe = document.getElementById("music");
+
+    iframe.src =
+    "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
+
+    started = true;
+
+    setTimeout(()=>{
+      iframe.src =
+      "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
+    },1500);
+  }
+
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
-
-  document.getElementById("music").src =
-  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
-
-  startTyping();
 }
 
 /* abrir carta */
+let typed = false;
+
 function openLetter(){
-  document.getElementById("env").classList.toggle("open");
+  const env = document.getElementById("env");
+  env.classList.toggle("open");
+
+  if(!typed){
+    startTyping();
+    typed = true;
+  }
 }
 
-/* texto digitando */
-const text = "mesmo com minhas brincadeiras... eu ainda amo muito você 💔";
+/* texto fofo curto */
+const text =
+"mesmo com minhas brincadeiras bobas... eu ainda amo muito você 💔";
+
 let i = 0;
 
 function startTyping(){
   const el = document.getElementById("typing");
+
   function type(){
     if(i < text.length){
       el.innerHTML += text.charAt(i);
@@ -203,18 +208,21 @@ function startTyping(){
       setTimeout(type,40);
     }
   }
+
   type();
 }
 
-/* sim */
+/* SIM */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
+  document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
-/* não foge */
+/* NÃO */
 function no(e){
   e.stopPropagation();
+
   const btn = document.getElementById("noBtn");
 
   const x = Math.random()*(window.innerWidth-100);
@@ -223,6 +231,10 @@ function no(e){
   btn.style.position="absolute";
   btn.style.left=x+"px";
   btn.style.top=y+"px";
+
+  const msg = document.getElementById("msg");
+  msg.style.display="block";
+  msg.innerText="vc é mt chata cara 😭";
 }
 
 /* sangue */
