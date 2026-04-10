@@ -75,21 +75,6 @@ body{
   box-shadow:0 0 25px red;
 }
 
-/* MENSAGEM DE AJUDA */
-.hint{
-  position:absolute;
-  bottom:40px;
-  font-size:0.9em;
-  color:#ff99aa;
-  opacity:0.8;
-  animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-  0%,100%{opacity:0.4;}
-  50%{opacity:1;}
-}
-
 /* CARTA */
 .envelope{
   width:90%;
@@ -124,6 +109,25 @@ body{
 
 .open .flap{transform:rotateX(180deg);}
 .open .letter{transform:translateY(0);}
+
+/* DICA DA CARTA */
+.hint2{
+  position:absolute;
+  top:calc(50% + 140px);
+  left:50%;
+  transform:translateX(-50%);
+  font-size:0.9em;
+  color:#ff99aa;
+  opacity:0.8;
+  animation:pulse 1.5s infinite;
+  z-index:15;
+  display:none;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:0.4;}
+  50%{opacity:1;}
+}
 
 button{
   margin-top:20px;
@@ -170,8 +174,8 @@ button{
   </div>
 </div>
 
-<!-- 🔥 MENSAGEM -->
-<div class="hint" id="hint">clica na cartinha &lt;3</div>
+<!-- 🔥 DICA -->
+<div class="hint2" id="hint2">abre a cartinha &lt;3</div>
 
 <!-- MÚSICA -->
 <iframe id="music" width="0" height="0" allow="autoplay"></iframe>
@@ -195,7 +199,7 @@ function typeLoading(){
   type();
 }
 
-/* preload */
+/* preload música */
 window.onload=function(){
   typeLoading();
 
@@ -203,7 +207,7 @@ window.onload=function(){
   iframe.src="https://www.youtube.com/embed/kJAE5Ufm5Zs?start=20&autoplay=1&mute=1";
 }
 
-/* som no primeiro clique */
+/* ativa som no primeiro clique */
 document.addEventListener("click", function firstClick(){
   const iframe=document.getElementById("music");
 
@@ -221,7 +225,7 @@ function enter(){
 function start(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
-  document.getElementById("hint").style.display="block";
+  document.getElementById("hint2").style.display="block";
 }
 
 /* carta */
@@ -231,7 +235,7 @@ function openLetter(){
   const env=document.getElementById("env");
   env.classList.toggle("open");
 
-  document.getElementById("hint").style.display="none";
+  document.getElementById("hint2").style.display="none";
 
   if(!typed){
     startTyping();
