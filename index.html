@@ -27,7 +27,7 @@ body{
   background:red;
   opacity:0.6;
   animation:fall linear infinite;
-  z-index:999; /* 🔥 GARANTE QUE FICA POR CIMA */
+  z-index:999;
 }
 @keyframes fall{
   to{transform:translateY(110vh);opacity:0;}
@@ -75,10 +75,19 @@ body{
   box-shadow:0 0 25px red;
 }
 
-.music-cover img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+/* MENSAGEM DE AJUDA */
+.hint{
+  position:absolute;
+  bottom:40px;
+  font-size:0.9em;
+  color:#ff99aa;
+  opacity:0.8;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:0.4;}
+  50%{opacity:1;}
 }
 
 /* CARTA */
@@ -161,6 +170,9 @@ button{
   </div>
 </div>
 
+<!-- 🔥 MENSAGEM -->
+<div class="hint" id="hint">clica na cartinha &lt;3</div>
+
 <!-- MÚSICA -->
 <iframe id="music" width="0" height="0" allow="autoplay"></iframe>
 
@@ -183,7 +195,7 @@ function typeLoading(){
   type();
 }
 
-/* pré-carrega */
+/* preload */
 window.onload=function(){
   typeLoading();
 
@@ -191,7 +203,7 @@ window.onload=function(){
   iframe.src="https://www.youtube.com/embed/kJAE5Ufm5Zs?start=20&autoplay=1&mute=1";
 }
 
-/* 🔥 ATIVA SOM NO PRIMEIRO TOQUE */
+/* som no primeiro clique */
 document.addEventListener("click", function firstClick(){
   const iframe=document.getElementById("music");
 
@@ -209,6 +221,7 @@ function enter(){
 function start(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
+  document.getElementById("hint").style.display="block";
 }
 
 /* carta */
@@ -217,6 +230,8 @@ let typed=false;
 function openLetter(){
   const env=document.getElementById("env");
   env.classList.toggle("open");
+
+  document.getElementById("hint").style.display="none";
 
   if(!typed){
     startTyping();
@@ -253,7 +268,7 @@ function no(e){
   document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
 
-/* sangue GLOBAL */
+/* sangue */
 function createDrop(){
   const drop=document.createElement("div");
   drop.classList.add("drop");
