@@ -47,8 +47,9 @@ body{
 }
 
 .hacker h2{
-  color:#ff4d6d;
-  text-shadow:0 0 10px red;
+  color:#00ff9f;
+  text-shadow:0 0 10px #00ff9f;
+  font-family:monospace;
 }
 
 /* CAPA */
@@ -145,7 +146,7 @@ h2{
 
 <!-- HACKER -->
 <div class="hacker" id="hacker">
-  <h2>inicializando conexão emocional...</h2>
+  <h2 id="loadingText"></h2>
   <button onclick="enter()">está pronta? 🩸</button>
 </div>
 
@@ -179,15 +180,32 @@ h2{
 
 <script>
 
-/* PRÉ-CARREGA SEM SOM */
-window.onload = function(){
-  const iframe = document.getElementById("music");
+/* TEXTO HACKER */
+const textLoading = "loading...";
+let li = 0;
 
+function typeLoading(){
+  const el = document.getElementById("loadingText");
+
+  function type(){
+    if(li < textLoading.length){
+      el.innerHTML += textLoading.charAt(li);
+      li++;
+      setTimeout(type,80);
+    }
+  }
+  type();
+}
+
+window.onload = function(){
+  typeLoading();
+
+  const iframe = document.getElementById("music");
   iframe.src =
   "https://www.youtube.com/embed/kJAE5Ufm5Zs?start=20&autoplay=1&mute=1";
 }
 
-/* ATIVA SOM (SEM DELAY) */
+/* ENTRADA */
 function enter(){
   const iframe=document.getElementById("music");
 
@@ -238,22 +256,19 @@ function yes(e){
   document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
+/* BOTÃO NÃO SOME */
 function no(e){
   e.stopPropagation();
 
   const btn=document.getElementById("noBtn");
 
-  const x=Math.random()*(window.innerWidth-100);
-  const y=Math.random()*(window.innerHeight-50);
-
-  btn.style.position="absolute";
-  btn.style.left=x+"px";
-  btn.style.top=y+"px";
+  btn.remove(); // 🔥 REMOVE O BOTÃO
 
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
 
+/* SANGUE */
 function createDrop(){
   const drop=document.createElement("div");
   drop.classList.add("drop");
