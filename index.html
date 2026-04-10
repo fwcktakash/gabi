@@ -32,24 +32,23 @@ body{
   to{transform:translateY(110vh);opacity:0;}
 }
 
-/* TELA HACKER */
+/* HACKER SCREEN */
 .hacker{
   position:absolute;
   width:100%;
   height:100%;
   background:black;
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
-  z-index:20;
+  z-index:30;
   text-align:center;
 }
 
-.hacker p{
-  font-size:0.9em;
+.hacker h2{
   color:#ff4d6d;
-  margin-top:10px;
+  text-shadow:0 0 10px red;
 }
 
 /* CAPA */
@@ -62,7 +61,7 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  z-index:10;
+  z-index:20;
 }
 
 .music-cover{
@@ -92,9 +91,10 @@ button{
   border:none;
   border-radius:20px;
   color:#fff;
+  font-size:1em;
 }
 
-/* carta */
+/* CARTA */
 .envelope{
   width:90%;
   max-width:320px;
@@ -125,15 +125,16 @@ button{
   text-align:center;
 }
 
-.open .flap{ transform:rotateX(180deg);}
-.open .letter{ transform:translateY(0);}
+.open .flap{transform:rotateX(180deg);}
+.open .letter{transform:translateY(0);}
 
-/* texto */
+/* TEXTOS */
 .text{margin-top:10px;font-size:0.95em;}
 .pergunta{margin-top:10px;color:#ff4d6d;}
 .ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
 .msg{margin-top:10px;display:none;}
 
+/* glitch leve */
 h2{
   color:#ff4d6d;
   text-shadow:0 0 10px red;
@@ -143,10 +144,10 @@ h2{
 
 <body>
 
-<!-- TELA HACKER (BUFFER) -->
+<!-- HACKER INTRO -->
 <div class="hacker" id="hacker">
   <h2 id="hacktext"></h2>
-  <p>conectando emoções...</p>
+  <p>conectando emoção...</p>
 </div>
 
 <!-- CAPA -->
@@ -177,60 +178,76 @@ h2{
   </div>
 </div>
 
+<!-- MÚSICA -->
 <iframe id="music" width="0" height="0" allow="autoplay"></iframe>
 
 <script>
 
 let started=false;
 
-/* HACKER TEXT */
-const hack = "inicializando conexão emocional com gabi...";
-let h = 0;
+/* =========================
+   PRELOAD MÚSICA (SEM DELAY)
+========================= */
+function preloadMusic(){
+  const iframe=document.getElementById("music");
 
-function hackType(){
-  const el = document.getElementById("hacktext");
-
-  function type(){
-    if(h < hack.length){
-      el.innerHTML += hack.charAt(h);
-      h++;
-      setTimeout(type,50);
-    }
-  }
-  type();
+  iframe.src =
+  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
 }
 
-window.onload = () => {
-  hackType();
-
-  setTimeout(()=>{
-    document.getElementById("hacker").style.display="none";
-    document.getElementById("cover").style.display="flex";
-  },2500);
-};
-
-/* START */
+/* =========================
+   START PRINCIPAL (SINCRONIZADO)
+========================= */
 function start(){
 
   if(!started){
-    const iframe = document.getElementById("music");
+    const iframe=document.getElementById("music");
 
-    iframe.src =
-    "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
-
-    started=true;
-
+    // ativa som instantâneo (sem recarregar vídeo)
     setTimeout(()=>{
       iframe.src =
       "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
-    },1200);
+    },50);
+
+    started=true;
   }
 
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 }
 
-/* carta */
+/* =========================
+   HACKER INTRO
+========================= */
+const hack="inicializando conexão emocional...";
+let h=0;
+
+function hackType(){
+  const el=document.getElementById("hacktext");
+
+  function type(){
+    if(h<hack.length){
+      el.innerHTML+=hack.charAt(h);
+      h++;
+      setTimeout(type,40);
+    }
+  }
+  type();
+}
+
+window.onload=()=>{
+  hackType();
+  preloadMusic();
+
+  setTimeout(()=>{
+    document.getElementById("hacker").style.display="none";
+    document.getElementById("cover").style.display="flex";
+  },2200);
+};
+
+/* =========================
+   CARTA
+========================= */
 let typed=false;
 
 function openLetter(){
@@ -243,8 +260,8 @@ function openLetter(){
   }
 }
 
-/* texto fofo */
-const text="mesmo com minhas brincadeiras bobas... eu amo muito você 💔";
+/* TEXTO FOFO */
+const text="mesmo com minhas brincadeiras bobas... eu ainda amo muito você 💔";
 let i=0;
 
 function startTyping(){
@@ -260,14 +277,18 @@ function startTyping(){
   type();
 }
 
-/* sim */
+/* =========================
+   BOTÃO SIM
+========================= */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
-/* não */
+/* =========================
+   BOTÃO NÃO
+========================= */
 function no(e){
   e.stopPropagation();
 
@@ -283,6 +304,20 @@ function no(e){
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
+
+/* =========================
+   SANGUE
+========================= */
+function createDrop(){
+  const drop=document.createElement("div");
+  drop.classList.add("drop");
+  drop.style.left=Math.random()*100+"vw";
+  drop.style.animationDuration=(Math.random()*2+2)+"s";
+  document.body.appendChild(drop);
+
+  setTimeout(()=>drop.remove(),3000);
+}
+setInterval(createDrop,120);
 
 </script>
 
