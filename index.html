@@ -129,7 +129,6 @@ button{
 .open .flap{transform:rotateX(180deg);}
 .open .letter{transform:translateY(0);}
 
-/* TEXTOS */
 .text{margin-top:10px;font-size:0.95em;}
 .pergunta{margin-top:10px;color:#ff4d6d;}
 .ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
@@ -144,7 +143,7 @@ h2{
 
 <body>
 
-<!-- HACKER INTRO -->
+<!-- HACKER -->
 <div class="hacker" id="hacker">
   <h2>inicializando conexão emocional...</h2>
   <button onclick="enter()">está pronta? 🩸</button>
@@ -164,11 +163,8 @@ h2{
 
   <div class="letter">
     <h2>Gabi...</h2>
-
     <p class="text" id="typing"></p>
-
     <p class="pergunta">me perdoa? 💔</p>
-
     <p class="ass">swaglean33 te ama 🖤</p>
 
     <button onclick="yes(event)">sim 💖</button>
@@ -183,30 +179,31 @@ h2{
 
 <script>
 
-/* =========================
-   ENTRADA (TOCA NA HORA)
-========================= */
+/* PRÉ-CARREGA SEM SOM */
+window.onload = function(){
+  const iframe = document.getElementById("music");
+
+  iframe.src =
+  "https://www.youtube.com/embed/kJAE5Ufm5Zs?start=20&autoplay=1&mute=1";
+}
+
+/* ATIVA SOM (SEM DELAY) */
 function enter(){
   const iframe=document.getElementById("music");
 
   iframe.src =
-  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
+  "https://www.youtube.com/embed/kJAE5Ufm5Zs?start=20&autoplay=1";
 
   document.getElementById("hacker").style.display="none";
   document.getElementById("cover").style.display="flex";
 }
 
-/* =========================
-   START
-========================= */
+/* RESTO */
 function start(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 }
 
-/* =========================
-   CARTA
-========================= */
 let typed=false;
 
 function openLetter(){
@@ -219,7 +216,6 @@ function openLetter(){
   }
 }
 
-/* TEXTO */
 const text="mesmo com minhas brincadeiras bobas... eu ainda amo muito você 💔";
 let i=0;
 
@@ -236,14 +232,12 @@ function startTyping(){
   type();
 }
 
-/* BOTÃO SIM */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
-/* BOTÃO NÃO */
 function no(e){
   e.stopPropagation();
 
@@ -260,7 +254,6 @@ function no(e){
   document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
 
-/* SANGUE */
 function createDrop(){
   const drop=document.createElement("div");
   drop.classList.add("drop");
