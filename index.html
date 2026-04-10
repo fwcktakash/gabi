@@ -1,230 +1,67 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gabi...</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Georgia,serif;}
-
-body{
-  height:100vh;
-  background:black;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  color:#fff;
-}
-
-/* Gotas de sangue */
-.drop{
-  position:absolute;
-  top:-20px;
-  width:2px;
-  height:15px;
-  background:red;
-  opacity:0.6;
-  animation:fall linear infinite;
-}
-
-@keyframes fall{
-  to{ transform:translateY(110vh); opacity:0;}
-}
-
-/* Capa */
-.cover{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:black;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:10;
-}
-
-.music-cover{
-  width:200px;
-  height:200px;
-  border-radius:12px;
-  overflow:hidden;
-  animation:heartbeat 1s infinite;
-}
-
-.music-cover img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-@keyframes heartbeat{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.08);}
-}
-
-button{
-  margin-top:20px;
-  padding:12px 25px;
-  background:#8b0000;
-  border:none;
-  border-radius:20px;
-  color:#fff;
-}
-
-/* Carta */
-.envelope{
-  width:90%;
-  max-width:320px;
-  height:220px;
-  background:#200;
-  position:relative;
-  display:none;
-}
-
-.flap{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:#400;
-  clip-path:polygon(0 0,100% 0,50% 60%);
-  transform-origin:top;
-  transition:1s;
-}
-
-.letter{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:#000;
-  padding:20px;
-  transform:translateY(100%);
-  transition:1s;
-  text-align:center;
-}
-
-.open .flap{ transform:rotateX(180deg);}
-.open .letter{ transform:translateY(0);}
-
-/* Glitch */
-.glitch{
-  color:#ff4d6d;
-  position:relative;
-}
-
-.glitch::before,
-.glitch::after{
-  content:attr(data-text);
-  position:absolute;
-  left:0;
-  width:100%;
-  opacity:0.8;
-}
-
-.glitch::before{
-  color:red;
-  animation:glitch 1s infinite;
-}
-
-.glitch::after{
-  color:blue;
-  animation:glitch 1s infinite reverse;
-}
-
-@keyframes glitch{
-  0%{transform:translate(0);}
-  20%{transform:translate(-2px,2px);}
-  40%{transform:translate(-2px,-2px);}
-  60%{transform:translate(2px,2px);}
-  80%{transform:translate(2px,-2px);}
-  100%{transform:translate(0);}
-}
-
-.text{
-  margin-top:10px;
-  font-size:0.95em;
-}
-
-.ass{
-  margin-top:15px;
-  font-size:0.85em;
-  color:#ff99aa;
-}
-
-.msg{
-  margin-top:10px;
-  display:none;
-  color:#fff;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="cover" id="cover">
-  <div class="music-cover">
-    <img src="vampire.png">
-  </div>
-  <button onclick="start()">tocar 🩸</button>
-</div>
-
-<div class="envelope" id="env" onclick="openLetter()">
-  <div class="flap"></div>
-  <div class="letter">
-    <h1 class="glitch" data-text="Gabi...">Gabi...</h1>
-    <p class="text" id="typing"></p>
-
-    <p class="ass">swaglean33 te ama 🖤</p>
-
-    <button onclick="accept(event)">me perdoa?</button>
-
-    <div class="msg" id="msg">
-      eu te amo ❤️
-    </div>
-  </div>
-</div>
-
-<iframe id="music" width="0" height="0" allow="autoplay"></iframe>
-
 <script>
+let musicStarted = false;
+
+/* música */
+function initMusic(){
+  const iframe = document.getElementById("music");
+  iframe.src =
+  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
+}
+
 function start(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 
-  document.getElementById("music").src=
+  const iframe = document.getElementById("music");
+  iframe.src =
   "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
 
   startTyping();
 }
 
-/* abrir carta */
+window.onload = initMusic;
+
+/* carta */
 function openLetter(){
   document.getElementById("env").classList.toggle("open");
 }
 
-/* texto digitando */
-const text = "eu errei... mas eu só quero você comigo 💔";
+/* TEXTO HACKER FOFO */
+const text = "mesmo com minhas brincadeiras idiotas... eu nunca deixei de te amar nem por um segundo 💔 eu só quero você, gabi...";
+
 let i = 0;
 
 function startTyping(){
-  let speed = 50;
+  const el = document.getElementById("typing");
+
   function type(){
     if(i < text.length){
-      document.getElementById("typing").innerHTML += text.charAt(i);
+      el.innerHTML += text.charAt(i);
       i++;
-      setTimeout(type, speed);
+      setTimeout(type, 40);
     }
   }
+
   type();
 }
 
-/* botão */
-function accept(e){
+/* botão SIM */
+function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
+}
+
+/* botão NÃO fugindo */
+function no(e){
+  e.stopPropagation();
+  const btn = document.getElementById("noBtn");
+
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+
+  btn.style.position = "absolute";
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
 }
 
 /* sangue */
@@ -239,6 +76,3 @@ function createDrop(){
 }
 setInterval(createDrop,100);
 </script>
-
-</body>
-</html>
