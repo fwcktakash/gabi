@@ -32,13 +32,33 @@ body{
   to{transform:translateY(110vh);opacity:0;}
 }
 
-/* capa */
-.cover{
+/* TELA HACKER */
+.hacker{
   position:absolute;
   width:100%;
   height:100%;
   background:black;
   display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:20;
+  text-align:center;
+}
+
+.hacker p{
+  font-size:0.9em;
+  color:#ff4d6d;
+  margin-top:10px;
+}
+
+/* CAPA */
+.cover{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:black;
+  display:none;
   flex-direction:column;
   justify-content:center;
   align-items:center;
@@ -72,7 +92,6 @@ button{
   border:none;
   border-radius:20px;
   color:#fff;
-  font-size:1em;
 }
 
 /* carta */
@@ -113,9 +132,8 @@ button{
 .text{margin-top:10px;font-size:0.95em;}
 .pergunta{margin-top:10px;color:#ff4d6d;}
 .ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
-.msg{margin-top:10px;display:none;color:#fff;}
+.msg{margin-top:10px;display:none;}
 
-/* glitch leve */
 h2{
   color:#ff4d6d;
   text-shadow:0 0 10px red;
@@ -125,12 +143,18 @@ h2{
 
 <body>
 
+<!-- TELA HACKER (BUFFER) -->
+<div class="hacker" id="hacker">
+  <h2 id="hacktext"></h2>
+  <p>conectando emoções...</p>
+</div>
+
 <!-- CAPA -->
 <div class="cover" id="cover">
   <div class="music-cover">
     <img src="vampire.png">
   </div>
-  <button onclick="start()">tocar 🩸</button>
+  <button onclick="start()">toca aqui sua linda 🩸</button>
 </div>
 
 <!-- CARTA -->
@@ -157,97 +181,108 @@ h2{
 
 <script>
 
-let started = false;
+let started=false;
 
-/* música suave */
+/* HACKER TEXT */
+const hack = "inicializando conexão emocional com gabi...";
+let h = 0;
+
+function hackType(){
+  const el = document.getElementById("hacktext");
+
+  function type(){
+    if(h < hack.length){
+      el.innerHTML += hack.charAt(h);
+      h++;
+      setTimeout(type,50);
+    }
+  }
+  type();
+}
+
+window.onload = () => {
+  hackType();
+
+  setTimeout(()=>{
+    document.getElementById("hacker").style.display="none";
+    document.getElementById("cover").style.display="flex";
+  },2500);
+};
+
+/* START */
 function start(){
+
   if(!started){
     const iframe = document.getElementById("music");
 
     iframe.src =
     "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
 
-    started = true;
+    started=true;
 
     setTimeout(()=>{
       iframe.src =
       "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
-    },1500);
+    },1200);
   }
 
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 }
 
-/* abrir carta */
-let typed = false;
+/* carta */
+let typed=false;
 
 function openLetter(){
-  const env = document.getElementById("env");
+  const env=document.getElementById("env");
   env.classList.toggle("open");
 
   if(!typed){
     startTyping();
-    typed = true;
+    typed=true;
   }
 }
 
-/* texto fofo curto */
-const text =
-"mesmo com minhas brincadeiras bobas... eu ainda amo muito você 💔";
-
-let i = 0;
+/* texto fofo */
+const text="mesmo com minhas brincadeiras bobas... eu amo muito você 💔";
+let i=0;
 
 function startTyping(){
-  const el = document.getElementById("typing");
+  const el=document.getElementById("typing");
 
   function type(){
-    if(i < text.length){
-      el.innerHTML += text.charAt(i);
+    if(i<text.length){
+      el.innerHTML+=text.charAt(i);
       i++;
       setTimeout(type,40);
     }
   }
-
   type();
 }
 
-/* SIM */
+/* sim */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
-/* NÃO */
+/* não */
 function no(e){
   e.stopPropagation();
 
-  const btn = document.getElementById("noBtn");
+  const btn=document.getElementById("noBtn");
 
-  const x = Math.random()*(window.innerWidth-100);
-  const y = Math.random()*(window.innerHeight-50);
+  const x=Math.random()*(window.innerWidth-100);
+  const y=Math.random()*(window.innerHeight-50);
 
   btn.style.position="absolute";
   btn.style.left=x+"px";
   btn.style.top=y+"px";
 
-  const msg = document.getElementById("msg");
-  msg.style.display="block";
-  msg.innerText="vc é mt chata cara 😭";
+  document.getElementById("msg").style.display="block";
+  document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
-
-/* sangue */
-function createDrop(){
-  const drop=document.createElement("div");
-  drop.classList.add("drop");
-  drop.style.left=Math.random()*100+"vw";
-  drop.style.animationDuration=(Math.random()*2+2)+"s";
-  document.body.appendChild(drop);
-
-  setTimeout(()=>drop.remove(),3000);
-}
-setInterval(createDrop,120);
 
 </script>
 
