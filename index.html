@@ -1,78 +1,243 @@
-<script>
-let musicStarted = false;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabi...</title>
 
-/* música */
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Georgia,serif;}
+
+body{
+  height:100vh;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* gotas */
+.drop{
+  position:absolute;
+  top:-20px;
+  width:2px;
+  height:15px;
+  background:red;
+  opacity:0.6;
+  animation:fall linear infinite;
+}
+@keyframes fall{to{transform:translateY(110vh);opacity:0;}}
+
+/* CAPA */
+.cover{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+.music-cover{
+  width:200px;
+  height:200px;
+  border-radius:12px;
+  overflow:hidden;
+  animation:heartbeat 1s infinite;
+}
+
+.music-cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+}
+
+button{
+  margin-top:20px;
+  padding:12px 25px;
+  background:#8b0000;
+  border:none;
+  border-radius:20px;
+  color:#fff;
+}
+
+/* CARTA */
+.envelope{
+  width:90%;
+  max-width:320px;
+  height:220px;
+  background:#200;
+  position:relative;
+  display:none;
+}
+
+.flap{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#400;
+  clip-path:polygon(0 0,100% 0,50% 60%);
+  transform-origin:top;
+  transition:1s;
+}
+
+.letter{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#000;
+  padding:20px;
+  transform:translateY(100%);
+  transition:1s;
+  text-align:center;
+}
+
+.open .flap{ transform:rotateX(180deg);}
+.open .letter{ transform:translateY(0);}
+
+/* glitch */
+.glitch{
+  color:#ff4d6d;
+  position:relative;
+}
+.glitch::before,
+.glitch::after{
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  width:100%;
+}
+.glitch::before{color:red;animation:glitch 1s infinite;}
+.glitch::after{color:blue;animation:glitch 1s infinite reverse;}
+
+@keyframes glitch{
+  0%{transform:translate(0);}
+  25%{transform:translate(-2px,2px);}
+  50%{transform:translate(2px,-2px);}
+  75%{transform:translate(-2px,-2px);}
+  100%{transform:translate(0);}
+}
+
+.text{margin-top:10px;font-size:0.9em;}
+.ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
+.msg{margin-top:10px;display:none;}
+
+</style>
+</head>
+
+<body>
+
+<!-- CAPA -->
+<div class="cover" id="cover">
+  <div class="music-cover">
+    <img src="vampire.png">
+  </div>
+  <button onclick="start()">tocar 🩸</button>
+</div>
+
+<!-- CARTA -->
+<div class="envelope" id="env" onclick="openLetter()">
+  <div class="flap"></div>
+
+  <div class="letter">
+    <h1 class="glitch" data-text="Gabi...">Gabi...</h1>
+
+    <p class="text" id="typing"></p>
+
+    <p class="ass">swaglean33 te ama 🖤</p>
+
+    <button onclick="yes(event)">sim 💖</button>
+    <button onclick="no(event)" id="noBtn">não 💔</button>
+
+    <div class="msg" id="msg">eu te amo ❤️</div>
+  </div>
+</div>
+
+<iframe id="music" width="0" height="0" allow="autoplay"></iframe>
+
+<script>
+/* iniciar música mutada */
 function initMusic(){
-  const iframe = document.getElementById("music");
-  iframe.src =
+  document.getElementById("music").src =
   "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
 }
 
+window.onload = initMusic;
+
+/* botão tocar */
 function start(){
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 
-  const iframe = document.getElementById("music");
-  iframe.src =
+  document.getElementById("music").src =
   "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
 
   startTyping();
 }
 
-window.onload = initMusic;
-
-/* carta */
+/* abrir carta */
 function openLetter(){
   document.getElementById("env").classList.toggle("open");
 }
 
-/* TEXTO HACKER FOFO */
-const text = "mesmo com minhas brincadeiras idiotas... eu nunca deixei de te amar nem por um segundo 💔 eu só quero você, gabi...";
-
+/* texto digitando */
+const text = "mesmo com minhas brincadeiras... eu ainda amo muito você 💔";
 let i = 0;
 
 function startTyping(){
   const el = document.getElementById("typing");
-
   function type(){
     if(i < text.length){
       el.innerHTML += text.charAt(i);
       i++;
-      setTimeout(type, 40);
+      setTimeout(type,40);
     }
   }
-
   type();
 }
 
-/* botão SIM */
+/* sim */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
 }
 
-/* botão NÃO fugindo */
+/* não foge */
 function no(e){
   e.stopPropagation();
   const btn = document.getElementById("noBtn");
 
-  const x = Math.random() * (window.innerWidth - 100);
-  const y = Math.random() * (window.innerHeight - 50);
+  const x = Math.random()*(window.innerWidth-100);
+  const y = Math.random()*(window.innerHeight-50);
 
-  btn.style.position = "absolute";
-  btn.style.left = x + "px";
-  btn.style.top = y + "px";
+  btn.style.position="absolute";
+  btn.style.left=x+"px";
+  btn.style.top=y+"px";
 }
 
 /* sangue */
 function createDrop(){
-  const drop = document.createElement("div");
+  const drop=document.createElement("div");
   drop.classList.add("drop");
-  drop.style.left = Math.random()*100+"vw";
-  drop.style.animationDuration = (Math.random()*2+2)+"s";
+  drop.style.left=Math.random()*100+"vw";
+  drop.style.animationDuration=(Math.random()*2+2)+"s";
   document.body.appendChild(drop);
 
   setTimeout(()=>drop.remove(),3000);
 }
-setInterval(createDrop,100);
+setInterval(createDrop,120);
+
 </script>
+
+</body>
+</html>
