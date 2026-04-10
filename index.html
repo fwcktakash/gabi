@@ -92,6 +92,7 @@ button{
   border-radius:20px;
   color:#fff;
   font-size:1em;
+  cursor:pointer;
 }
 
 /* CARTA */
@@ -134,7 +135,6 @@ button{
 .ass{margin-top:10px;font-size:0.8em;color:#ff99aa;}
 .msg{margin-top:10px;display:none;}
 
-/* glitch leve */
 h2{
   color:#ff4d6d;
   text-shadow:0 0 10px red;
@@ -146,8 +146,8 @@ h2{
 
 <!-- HACKER INTRO -->
 <div class="hacker" id="hacker">
-  <h2 id="hacktext"></h2>
-  <p>conectando emoção...</p>
+  <h2>inicializando conexão emocional...</h2>
+  <button onclick="enter()">está pronta? 🩸</button>
 </div>
 
 <!-- CAPA -->
@@ -183,67 +183,26 @@ h2{
 
 <script>
 
-let started=false;
-
 /* =========================
-   PRELOAD MÚSICA (SEM DELAY)
+   ENTRADA (TOCA NA HORA)
 ========================= */
-function preloadMusic(){
+function enter(){
   const iframe=document.getElementById("music");
 
   iframe.src =
-  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1&mute=1";
+  "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
+
+  document.getElementById("hacker").style.display="none";
+  document.getElementById("cover").style.display="flex";
 }
 
 /* =========================
-   START PRINCIPAL (SINCRONIZADO)
+   START
 ========================= */
 function start(){
-
-  if(!started){
-    const iframe=document.getElementById("music");
-
-    // ativa som instantâneo (sem recarregar vídeo)
-    setTimeout(()=>{
-      iframe.src =
-      "https://www.youtube.com/embed/hoa_oc3jBbo?start=26&autoplay=1";
-    },50);
-
-    started=true;
-  }
-
   document.getElementById("cover").style.display="none";
   document.getElementById("env").style.display="block";
 }
-
-/* =========================
-   HACKER INTRO
-========================= */
-const hack="inicializando conexão emocional...";
-let h=0;
-
-function hackType(){
-  const el=document.getElementById("hacktext");
-
-  function type(){
-    if(h<hack.length){
-      el.innerHTML+=hack.charAt(h);
-      h++;
-      setTimeout(type,40);
-    }
-  }
-  type();
-}
-
-window.onload=()=>{
-  hackType();
-  preloadMusic();
-
-  setTimeout(()=>{
-    document.getElementById("hacker").style.display="none";
-    document.getElementById("cover").style.display="flex";
-  },2200);
-};
 
 /* =========================
    CARTA
@@ -260,7 +219,7 @@ function openLetter(){
   }
 }
 
-/* TEXTO FOFO */
+/* TEXTO */
 const text="mesmo com minhas brincadeiras bobas... eu ainda amo muito você 💔";
 let i=0;
 
@@ -277,18 +236,14 @@ function startTyping(){
   type();
 }
 
-/* =========================
-   BOTÃO SIM
-========================= */
+/* BOTÃO SIM */
 function yes(e){
   e.stopPropagation();
   document.getElementById("msg").style.display="block";
   document.getElementById("msg").innerText="eu te amo ❤️";
 }
 
-/* =========================
-   BOTÃO NÃO
-========================= */
+/* BOTÃO NÃO */
 function no(e){
   e.stopPropagation();
 
@@ -305,9 +260,7 @@ function no(e){
   document.getElementById("msg").innerText="vc é mt chata cara 😭";
 }
 
-/* =========================
-   SANGUE
-========================= */
+/* SANGUE */
 function createDrop(){
   const drop=document.createElement("div");
   drop.classList.add("drop");
